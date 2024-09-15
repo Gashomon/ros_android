@@ -1,6 +1,5 @@
 package com.example.myplaces;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,7 +7,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -24,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
     TextView number;
     int i = 0;
     String mens;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,12 +49,13 @@ public class MainActivity extends AppCompatActivity {
         Handler h = new Handler();
         @Override
         protected Void doInBackground(String... voids) {
+            Log.i("i", "hello");
             try {
                 mens = String.valueOf(i);
 
                 if(s == null){
                     //change it to your IP
-                    s = new Socket("172.16.42.25",6000);
+                    s = new Socket("192.168.137.94",6000);
                     writer = new PrintWriter(s.getOutputStream());
                     Log.i("i", "CONNECTED");
                 }
@@ -69,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         number.setText(mens);
+                        Log.i("i", "lol");
                     }
                 });
             }
