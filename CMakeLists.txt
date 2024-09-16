@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(cpp_pubsub)
+project(rosandroid_sample)
 
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
@@ -20,9 +20,13 @@ ament_target_dependencies(talker rclcpp std_msgs)
 add_executable(listener src/subscriber_member_function.cpp)
 ament_target_dependencies(listener rclcpp std_msgs)
 
+add_executable(modtalk src/modified_publisher.cpp)
+ament_target_dependencies(modtalk rclcpp std_msgs)
+
 install(TARGETS
   talker
   listener
+  modtalk
   DESTINATION lib/${PROJECT_NAME})
   
 ament_package()

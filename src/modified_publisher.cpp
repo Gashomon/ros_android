@@ -39,6 +39,7 @@ using namespace std::chrono_literals;
 
 #include "rclcpp/rclcpp.hpp"
  
+ 
 int main(int argc, char *argv[]) {
 
 
@@ -62,23 +63,17 @@ int main(int argc, char *argv[]) {
   // Tell Winsock the socket is for listening
   listen(listening, SOMAXCONN);
 
-  // Wait for a connection
+  // Close listening socket
+  // close(listening);
+ 
+  // While loop: accept and echo message back to client
+  char buf[4096];
+
+    // Wait for a connection
   sockaddr_in client;
   socklen_t clientSize = sizeof(client);
 
   int clientSocket = accept(listening, (sockaddr*)&client, &clientSize);
-  // int clientSocket = accept(listening, nullptr, nullptr);
-
-  char host[NI_MAXHOST];      // Client's remote name
-  char service[NI_MAXSERV];   // Service (i.e. port) the client is connect on
-
-  memset(host, 0, NI_MAXHOST); // same as memset(host, 0, NI_MAXHOST);
-  memset(service, 0, NI_MAXSERV);
-  // Close listening socket
-  close(listening);
- 
-  // While loop: accept and echo message back to client
-  char buf[4096];
 
   rclcpp::init(argc, argv);
 
@@ -97,12 +92,22 @@ int main(int argc, char *argv[]) {
         {
             //cout << "Error in recv(). Quitting" << endl;
             break;
+            close(clientSocket);
+            sockaddr_in client;
+            socklen_t clientSize = sizeof(client);
+
+            clientSocket = accept(listening, (sockaddr*)&client, &clientSize);
         }
  
         if (bytesReceived == 0)
         {
             //cout << "Client disconnected " << endl;
-            break;
+            // break;
+            close(clientSocket);
+              sockaddr_in client;
+              socklen_t clientSize = sizeof(client);
+
+              clientSocket = accept(listening, (sockaddr*)&client, &clientSize);
         }
         //RCLCPP_INFO(node->get_logger(), buf);
         message.data = buf;
