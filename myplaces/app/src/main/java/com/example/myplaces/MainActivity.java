@@ -10,8 +10,12 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.Reader;
 import java.net.Socket;
 
 public class MainActivity extends AppCompatActivity {
@@ -19,9 +23,11 @@ public class MainActivity extends AppCompatActivity {
     Button conection;
     Socket s;
     PrintWriter writer;
+    DataInputStream reader;
     TextView number;
     int i = 0;
-    String mens;
+    String send;
+    String get;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,25 +55,34 @@ public class MainActivity extends AppCompatActivity {
         Handler h = new Handler();
         @Override
         protected Void doInBackground(String... voids) {
-            Log.i("i", "hello");
+//            Log.i("i", "hello");
             try {
-                mens = String.valueOf(i);
-
                 if(s == null){
                     //change it to your IP
                     s = new Socket("192.168.137.94",6000);
                     writer = new PrintWriter(s.getOutputStream());
-                    Log.i("i", "CONNECTED");
+                    reader = new DataInputStream(
+                            new BufferedInputStream(s.getInputStream()));
+                    Log.i("i", "CONNECTED");    
                 }
-                writer.write(mens);
+                if ((i%5) == 0) {
+                    send = "fifth";
+                    get = "fifth";
+                }
+                else{
+                    send = String.valueOf(i);
+//                    get = reader.readLine();
+                }
+                if(i> 10){s.close();}
+                writer.write(send);
                 writer.flush();
-                //writer.close();
+//                writer.close();
                 i = i+1;
                 h.post(new Runnable() {
                     @Override
                     public void run() {
-                        number.setText(mens);
-                        Log.i("i", "lol");
+                        number.setText(get);
+//                        Log.i("i", "lol");
                     }
                 });
             }
