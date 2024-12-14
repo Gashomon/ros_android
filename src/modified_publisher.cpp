@@ -69,7 +69,7 @@ int main(int argc, char *argv[]) {
   // While loop: accept and echo message back to client
   char buf[4096];
 
-    // Wait for a connection
+  // Wait for a connection
   sockaddr_in client;
   socklen_t clientSize = sizeof(client);
 
